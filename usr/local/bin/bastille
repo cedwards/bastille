@@ -32,7 +32,7 @@
 . /usr/local/etc/bastille/bastille.conf
 
 ## version
-BASTILLE_VERSION="0.3.20190623"
+BASTILLE_VERSION="0.3.20190623-network"
 
 usage() {
     cat << EOF
@@ -54,6 +54,7 @@ Available Commands:
   list        List containers (running and stopped).
   pkg         Manipulate binary packages within targeted container(s). See pkg(8).
   restart     Restart a running container.
+  service     Manage services within targeted jail(s).
   start       Start a stopped container.
   stop        Stop a running container.
   sysrc       Safely edit rc files within targeted container(s).
@@ -77,19 +78,23 @@ shift
 # Handle special-case commands first.
 case "${CMD}" in
 version|-v|--version)
-    echo -e "${COLOR_GREEN}${BASTILLE_VERSION}${COLOR_RESET}"
-    exit 0
-    ;;
+	echo -e "${COLOR_GREEN}${BASTILLE_VERSION}${COLOR_RESET}"
+	exit 0
+	;;
 help|-h|--help)
-    usage
-    ;;
+	usage
+	;;
 esac
 
 # Filter out all non-commands
 case "${CMD}" in
-bootstrap|cmd|console|cp|create|destroy|htop|list|pkg|restart|service)
+cmd|cp|create|destroy|list|pkg|restart|start|stop|sysrc|template|verify)
     ;;
-start|stop|sysrc|template|top|update|upgrade|verify|zfs)
+update|upgrade)
+    ;;
+service|console|bootstrap|htop|top)
+    ;;
+bootstrap|update|upgrade|zfs)
     ;;
 *)
 usage

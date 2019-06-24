@@ -94,7 +94,13 @@ create_jail() {
     fi
 
     if [ ! -f "${bastille_jail_conf}" ]; then
-echo -e "interface = lo1;\nhost.hostname = ${NAME};\nexec.consolelog = \
+        if [ -z ${bastille_jail_loopback} ] && [ ! -z ${bastille_jail_external} ]; then
+            local bastille_jail_conf_interface=${bastille_jail_external}
+        fi
+        if [ ! -z ${bastille_jail_loopback} ] && [ -z ${bastille_jail_external} ]; then
+            local bastille_jail_conf_interface=${bastille_jail_interface}
+        fi
+echo -e "interface = ${bastille_jail_conf_interface};\nhost.hostname = ${NAME};\nexec.consolelog = \
 ${bastille_jail_log};\npath = ${bastille_jail_path};\nip6 = \
 disable;\nsecurelevel = 2;\ndevfs_ruleset = 4;\nenforce_statfs = \
 2;\nexec.start = '/bin/sh /etc/rc';\nexec.stop = '/bin/sh \
